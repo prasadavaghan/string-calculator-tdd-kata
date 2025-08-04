@@ -1,12 +1,17 @@
+function escapeRegExp(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function add(numbers) {
   if (!numbers) return 0;
 
   let delimiter = /,|\n/;
 
   if (numbers.startsWith("//")) {
-    const [_, customDelimiter, rest] = numbers.match(/^\/\/(.+)\n(.*)/s);
-    delimiter = new RegExp(customDelimiter);
-    numbers = rest;
+    const newlineIndex = numbers.indexOf("\n");
+    const delimiterStr = numbers.slice(2, newlineIndex);
+    delimiter = new RegExp(escapeRegExp(delimiterStr));
+    numbers = numbers.slice(newlineIndex + 1);
   }
 
   const tokens = numbers.split(delimiter).map(Number);
